@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grille — Posture professionnelle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f4f2ee;
+      --surface: #ffffff;
+      --border: #dedad2;
+      --border-soft: #eae7e0;
+      --text: #181715;
+      --text-muted: #6b6860;
+      --text-hint: #a09e99;
+      --radius: 10px;
+      --radius-lg: 14px;
+      --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 6px 16px rgba(0,0,0,0.04);
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .page { max-width: 800px; margin: 0 auto; }
+
+    /* HEADER */
+    .header { margin-bottom: 1.75rem; }
+    .header-eyebrow {
+      font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-hint); margin-bottom: 8px;
+    }
+    .header h1 { font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.25; }
+    .header p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    /* IDENTITE */
+    .identite {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem 1.5rem;
+      align-items: start;
+    }
+    .field-label {
+      font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-hint); margin-bottom: 7px;
+    }
+    .field-input {
+      width: 100%; border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 12px; font-size: 14px; font-family: inherit;
+      color: var(--text); background: #faf9f7; outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .field-input:focus { border-color: #888; background: #fff; }
+
+    .semestres { display: flex; gap: 6px; flex-wrap: wrap; }
+    .sem-btn {
+      border: 1px solid var(--border); background: #faf9f7;
+      border-radius: 8px; padding: 7px 12px;
+      font-size: 12.5px; font-weight: 500; color: var(--text-muted);
+      cursor: pointer; transition: all 0.14s; font-family: inherit;
+    }
+    .sem-btn:hover { border-color: #bbb; color: var(--text); }
+    .sem-btn.active { background: #181715; border-color: #181715; color: #fff; }
+
+    /* CARD */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden;
+    }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      font-size: 10.5px; font-weight: 600; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--text-hint);
+      padding: 12px 8px; text-align: center;
+      background: #f9f8f5; border-bottom: 1px solid var(--border);
+    }
+    thead th:first-child { text-align: left; padding-left: 20px; }
+    tbody tr { border-bottom: 1px solid var(--border-soft); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 10px 6px; vertical-align: middle; }
+    tbody td:first-child { padding-left: 20px; }
+    tbody td:last-child { padding-right: 16px; }
+    .critere-label { font-size: 13.5px; color: var(--text); width: 36%; }
+
+    /* NOTE BUTTONS */
+    .note-btn {
+      display: block; width: 100%; padding: 7px 2px;
+      border: 1px solid var(--border); background: #faf9f7;
+      border-radius: 8px; font-size: 12.5px; font-weight: 600;
+      color: var(--text-hint); cursor: pointer; text-align: center;
+      transition: all 0.13s ease; font-family: inherit;
+    }
+    .note-btn:hover { border-color: #bbb; color: var(--text-muted); background: #eeece6; }
+
+    .note-btn.selected-TI { background:#378ADD; border-color:#185FA5; color:#fff; font-size:16px; padding:10px 2px; box-shadow:0 0 0 3px #B5D4F4; }
+    .note-btn.selected-I  { background:#639922; border-color:#3B6D11; color:#fff; font-size:16px; padding:10px 2px; box-shadow:0 0 0 3px #C0DD97; }
+    .note-btn.selected-S  { background:#EF9F27; border-color:#854F0B; color:#412402; font-size:16px; padding:10px 2px; box-shadow:0 0 0 3px #FAC775; }
+    .note-btn.selected-TS { background:#D85A30; border-color:#993C1D; color:#fff; font-size:16px; padding:10px 2px; box-shadow:0 0 0 3px #F5C4B3; }
+
+    /* RESULT */
+    .result {
+      background: #f9f8f5; border-top: 1px solid var(--border);
+      padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 20px;
+    }
+    .score-block { min-width: 90px; }
+    .score-number { font-size: 42px; font-weight: 700; color: var(--text); line-height: 1; }
+    .score-denom { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .result-detail { flex: 1; }
+    .result-status { font-size: 11.5px; color: var(--text-hint); margin-bottom: 4px; }
+    .result-mention { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+    .progress-bg { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 5px; border-radius: 3px; background: #c0bdb6; transition: width 0.4s ease, background 0.4s ease; width: 0%; }
+
+    /* FOOTER */
+    .footer { margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .legende { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+    .leg-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-muted); }
+    .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .nb-eval { font-size: 12px; color: var(--text-hint); }
+    .actions { display: flex; gap: 8px; }
+    .reset-btn {
+      font-size: 13px; color: var(--text-muted); background: var(--surface);
+      border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px;
+      cursor: pointer; transition: background 0.15s; font-family: inherit;
+    }
+    .reset-btn:hover { background: var(--border-soft); }
+    .export-btn {
+      font-size: 13px; font-weight: 500; color: #fff; background: #181715;
+      border: 1px solid #181715; border-radius: 8px; padding: 7px 18px;
+      cursor: pointer; transition: opacity 0.15s; font-family: inherit;
+    }
+    .export-btn:hover { opacity: 0.75; }
+
+    /* PRINT */
+    @media print {
+      @page { margin: 1.5cm 2cm; }
+      body { background: #fff; padding: 0; font-size: 13px; }
+      .identite, .card { box-shadow: none !important; border: 1px solid #ccc !important; }
+      .note-btn { box-shadow: none !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .export-btn, .reset-btn, .actions { display: none !important; }
+      .footer { margin-top: 0.5rem; }
+      .header { margin-bottom: 1rem; }
+    }
+
+    @media (max-width: 620px) {
+      .identite { grid-template-columns: 1fr 1fr; }
+      .header h1 { font-size: 20px; }
+      .score-number { font-size: 32px; }
+      .result { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+    @media (max-width: 420px) {
+      .identite { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-eyebrow">Évaluation formative</div>
+    <h1>Posture professionnelle en formation</h1>
+    <p>Cette grille évalue votre posture professionnelle en formation durant le semestre dernier.</p>
+  </div>
+
+  <div class="identite">
+    <div>
+      <div class="field-label">Nom</div>
+      <input class="field-input" id="field-nom" type="text" placeholder="DUPONT" />
+    </div>
+    <div>
+      <div class="field-label">Prénom</div>
+      <input class="field-input" id="field-prenom" type="text" placeholder="Marie" />
+    </div>
+    <div>
+      <div class="field-label">Semestre</div>
+      <div class="semestres" id="semestres">
+        <button class="sem-btn" onclick="pickSem(this,1)">S1</button>
+        <button class="sem-btn" onclick="pickSem(this,2)">S2</button>
+        <button class="sem-btn" onclick="pickSem(this,3)">S3</button>
+        <button class="sem-btn" onclick="pickSem(this,4)">S4</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Critère</th>
+          <th>TI<br><span style="font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">Très insatisfaisant</span></th>
+          <th>I<br><span style="font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">Insatisfaisant</span></th>
+          <th>S<br><span style="font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">Satisfaisant</span></th>
+          <th>TS<br><span style="font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;">Très satisfaisant</span></th>
+        </tr>
+      </thead>
+      <tbody id="eval-body"></tbody>
+    </table>
+
+    <div class="result">
+      <div class="score-block">
+        <div class="score-number" id="score-number">—</div>
+        <div class="score-denom">/20</div>
+      </div>
+      <div class="result-detail">
+        <div class="result-status" id="result-status">En attente des évaluations</div>
+        <div class="result-mention" id="result-mention" style="color:var(--text-muted);">—</div>
+        <div class="progress-bg"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="legende">
+      <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>TI = 0 pt</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#639922"></div>I = 1 pt</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#EF9F27"></div>S = 2 pts</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#D85A30"></div>TS = 3 pts</div>
+      <span class="nb-eval" id="nb-eval" style="margin-left:4px;">0 / 7 renseignés</span>
+    </div>
+    <div class="actions">
+      <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser</button>
+      <button class="export-btn" onclick="exportPDF()">↓ Exporter en PDF</button>
+    </div>
+  </div>
+
+</div>
+<script>
+  const criteres = [
+    "Ponctualité","Présence","Implication dans l'apprentissage",
+    "Échanges avec le formateur","Qualité des rendus",
+    "Prise en compte des remarques","Volonté de progresser"
+  ];
+  const mentions = ["TI","I","S","TS"];
+  const points = { TI:0, I:1, S:2, TS:3 };
+  const MAX = 21;
+  let selections = {};
+  let semestre = null;
+
+  function buildTable() {
+    const tbody = document.getElementById("eval-body");
+    criteres.forEach((c, i) => {
+      const tr = document.createElement("tr");
+      let html = `<td class="critere-label">${c}</td>`;
+      mentions.forEach(m => {
+        html += `<td style="padding:8px 5px;"><button class="note-btn" id="btn-${i}-${m}" onclick="pick(${i},'${m}')">${m}</button></td>`;
+      });
+      tr.innerHTML = html;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function pick(idx, mention) {
+    selections[idx] = (selections[idx] === mention) ? undefined : mention;
+    if (selections[idx] === undefined) delete selections[idx];
+    mentions.forEach(m => {
+      document.getElementById(`btn-${idx}-${m}`).className =
+        selections[idx] === m ? `note-btn selected-${m}` : "note-btn";
+    });
+    updateScore();
+  }
+
+  function pickSem(btn, num) {
+    document.querySelectorAll(".sem-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    semestre = num;
+  }
+
+  function updateScore() {
+    const count = Object.keys(selections).length;
+    document.getElementById("nb-eval").textContent = `${count} / 7 renseignés`;
+    if (count === 0) {
+      document.getElementById("score-number").textContent = "—";
+      document.getElementById("result-status").textContent = "En attente des évaluations";
+      document.getElementById("result-mention").textContent = "—";
+      document.getElementById("result-mention").style.color = "var(--text-muted)";
+      document.getElementById("progress-fill").style.width = "0%";
+      document.getElementById("progress-fill").style.background = "#c0bdb6";
+      return;
+    }
+    const total = Object.values(selections).reduce((s, m) => s + points[m], 0);
+    const note = Math.round((total / MAX) * 20 * 10) / 10;
+    document.getElementById("score-number").textContent = note.toFixed(1);
+    let mention, color;
+    if (note < 7)       { mention = "Insuffisant";            color = "#378ADD"; }
+    else if (note < 12) { mention = "En cours d'acquisition"; color = "#EF9F27"; }
+    else if (note < 16) { mention = "Acquis";                 color = "#639922"; }
+    else                { mention = "Très bien acquis";        color = "#D85A30"; }
+    document.getElementById("result-status").textContent = count < 7 ? `${count}/7 critères — score partiel` : "Résultat final";
+    document.getElementById("result-mention").textContent = mention;
+    document.getElementById("result-mention").style.color = color;
+    document.getElementById("progress-fill").style.width = Math.round((note / 20) * 100) + "%";
+    document.getElementById("progress-fill").style.background = color;
+  }
+
+  function exportPDF() {
+    const nom = document.getElementById("field-nom").value.trim().toUpperCase().replace(/\s+/g,"_") || "NOM";
+    const prenom = document.getElementById("field-prenom").value.trim()
+      .split(/\s+/).map(p => p.charAt(0).toUpperCase()+p.slice(1).toLowerCase()).join("_") || "Prenom";
+    const sem = semestre ? `_semestre_${semestre}` : "";
+    const filename = `${nom}_${prenom}_posture_professionnelle${sem}`;
+    const oldTitle = document.title;
+    document.title = filename;
+    window.print();
+    setTimeout(() => { document.title = oldTitle; }, 1500);
+  }
+
+  function resetAll() {
+    selections = {};
+    criteres.forEach((_, i) => mentions.forEach(m => {
+      document.getElementById(`btn-${i}-${m}`).className = "note-btn";
+    }));
+    document.getElementById("field-nom").value = "";
+    document.getElementById("field-prenom").value = "";
+    document.querySelectorAll(".sem-btn").forEach(b => b.classList.remove("active"));
+    semestre = null;
+    updateScore();
+  }
+
+  buildTable();
+</script>
+</body>
+</html>
