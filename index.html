@@ -6,91 +6,39 @@
   <title>Grille — Posture professionnelle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #f4f2ee;
-      --surface: #ffffff;
-      --border: #dedad2;
-      --border-soft: #eae7e0;
-      --text: #181715;
-      --text-muted: #6b6860;
-      --text-hint: #a09e99;
-      --radius: 10px;
-      --radius-lg: 14px;
-      --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 6px 16px rgba(0,0,0,0.04);
+      --bg: #f4f2ee; --surface: #ffffff; --border: #dedad2; --border-soft: #eae7e0;
+      --text: #181715; --text-muted: #6b6860; --text-hint: #a09e99;
+      --radius-lg: 14px; --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 6px 16px rgba(0,0,0,0.04);
     }
-
-    body {
-      background: var(--bg);
-      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      padding: 2.5rem 1rem 5rem;
-    }
-
+    body { background: var(--bg); font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: var(--text); min-height: 100vh; padding: 2.5rem 1rem 5rem; }
     .page { max-width: 800px; margin: 0 auto; }
 
     /* HEADER */
     .header { margin-bottom: 1.75rem; }
-    .header-eyebrow {
-      font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--text-hint); margin-bottom: 8px;
-    }
+    .header-eyebrow { font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-hint); margin-bottom: 8px; }
     .header h1 { font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.25; }
     .header p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
 
     /* IDENTITE */
-    .identite {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 1rem 1.5rem;
-      align-items: start;
-    }
-    .field-label {
-      font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--text-hint); margin-bottom: 7px;
-    }
-    .field-input {
-      width: 100%; border: 1px solid var(--border); border-radius: 8px;
-      padding: 8px 12px; font-size: 14px; font-family: inherit;
-      color: var(--text); background: #faf9f7; outline: none;
-      transition: border-color 0.15s, background 0.15s;
-    }
+    .identite { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 1.25rem 1.5rem; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem 1.5rem; }
+    .field-label { font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-hint); margin-bottom: 7px; }
+    .field-input { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; color: var(--text); background: #faf9f7; outline: none; transition: border-color 0.15s, background 0.15s; }
     .field-input:focus { border-color: #888; background: #fff; }
-
     .semestres { display: flex; gap: 6px; flex-wrap: wrap; }
-    .sem-btn {
-      border: 1px solid var(--border); background: #faf9f7;
-      border-radius: 8px; padding: 7px 12px;
-      font-size: 12.5px; font-weight: 500; color: var(--text-muted);
-      cursor: pointer; transition: all 0.14s; font-family: inherit;
-    }
+    .sem-btn { border: 1px solid var(--border); background: #faf9f7; border-radius: 8px; padding: 7px 12px; font-size: 12.5px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.14s; font-family: inherit; }
     .sem-btn:hover { border-color: #bbb; color: var(--text); }
     .sem-btn.active { background: #181715; border-color: #181715; color: #fff; }
 
     /* CARD */
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden;
-    }
-
-    /* TABLE */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; }
     table { width: 100%; border-collapse: collapse; }
-    thead th {
-      font-size: 10.5px; font-weight: 600; letter-spacing: 0.07em;
-      text-transform: uppercase; color: var(--text-hint);
-      padding: 12px 8px; text-align: center;
-      background: #f9f8f5; border-bottom: 1px solid var(--border);
-    }
+    thead th { font-size: 10.5px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-hint); padding: 12px 8px; text-align: center; background: #f9f8f5; border-bottom: 1px solid var(--border); }
     thead th:first-child { text-align: left; padding-left: 20px; }
     tbody tr { border-bottom: 1px solid var(--border-soft); }
     tbody tr:last-child { border-bottom: none; }
@@ -100,26 +48,15 @@
     .critere-label { font-size: 13.5px; color: var(--text); width: 36%; }
 
     /* NOTE BUTTONS */
-    .note-btn {
-      display: block; width: 100%; padding: 7px 2px;
-      border: 1px solid var(--border); background: #faf9f7;
-      border-radius: 8px; font-size: 12.5px; font-weight: 600;
-      color: var(--text-hint); cursor: pointer; text-align: center;
-      transition: all 0.13s ease; font-family: inherit;
-    }
+    .note-btn { display: block; width: 100%; padding: 7px 2px; border: 1px solid var(--border); background: #faf9f7; border-radius: 8px; font-size: 12.5px; font-weight: 600; color: var(--text-hint); cursor: pointer; text-align: center; transition: all 0.13s ease; font-family: inherit; }
     .note-btn:hover { border-color: #bbb; color: var(--text-muted); background: #eeece6; }
-
     .note-btn.selected-TI { background:#378ADD; border-color:#185FA5; color:#fff; font-size:16px; padding:10px 2px; box-shadow:0 0 0 3px #B5D4F4; }
     .note-btn.selected-I  { background:#639922; border-color:#3B6D11; color:#fff; font-size:16px; padding:10px 2px; box-shadow:0 0 0 3px #C0DD97; }
     .note-btn.selected-S  { background:#EF9F27; border-color:#854F0B; color:#412402; font-size:16px; padding:10px 2px; box-shadow:0 0 0 3px #FAC775; }
     .note-btn.selected-TS { background:#D85A30; border-color:#993C1D; color:#fff; font-size:16px; padding:10px 2px; box-shadow:0 0 0 3px #F5C4B3; }
 
     /* RESULT */
-    .result {
-      background: #f9f8f5; border-top: 1px solid var(--border);
-      padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 20px;
-    }
-    .score-block { min-width: 90px; }
+    .result { background: #f9f8f5; border-top: 1px solid var(--border); padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 20px; }
     .score-number { font-size: 42px; font-weight: 700; color: var(--text); line-height: 1; }
     .score-denom { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
     .result-detail { flex: 1; }
@@ -135,29 +72,50 @@
     .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .nb-eval { font-size: 12px; color: var(--text-hint); }
     .actions { display: flex; gap: 8px; }
-    .reset-btn {
-      font-size: 13px; color: var(--text-muted); background: var(--surface);
-      border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px;
-      cursor: pointer; transition: background 0.15s; font-family: inherit;
-    }
+    .reset-btn { font-size: 13px; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
     .reset-btn:hover { background: var(--border-soft); }
-    .export-btn {
-      font-size: 13px; font-weight: 500; color: #fff; background: #181715;
-      border: 1px solid #181715; border-radius: 8px; padding: 7px 18px;
-      cursor: pointer; transition: opacity 0.15s; font-family: inherit;
-    }
+    .export-btn { font-size: 13px; font-weight: 500; color: #fff; background: #181715; border: 1px solid #181715; border-radius: 8px; padding: 7px 18px; cursor: pointer; transition: opacity 0.15s; font-family: inherit; display: flex; align-items: center; gap: 6px; }
     .export-btn:hover { opacity: 0.75; }
+    .export-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* PRINT */
-    @media print {
-      @page { margin: 1.5cm 2cm; }
-      body { background: #fff; padding: 0; font-size: 13px; }
-      .identite, .card { box-shadow: none !important; border: 1px solid #ccc !important; }
-      .note-btn { box-shadow: none !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .export-btn, .reset-btn, .actions { display: none !important; }
-      .footer { margin-top: 0.5rem; }
-      .header { margin-bottom: 1rem; }
-    }
+    /* SPINNER */
+    .spinner { width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+    .export-btn.loading .spinner { display: block; }
+    .export-btn.loading .btn-label { opacity: 0.7; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ZONE PDF - cachée mais capturée */
+    #pdf-zone { position: fixed; left: -9999px; top: 0; width: 794px; background: #fff; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; padding: 40px 48px 48px; }
+    .pdf-header { margin-bottom: 28px; border-bottom: 2px solid #181715; padding-bottom: 18px; }
+    .pdf-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #a09e99; margin-bottom: 6px; }
+    .pdf-title { font-size: 20px; font-weight: 700; color: #181715; margin-bottom: 4px; }
+    .pdf-subtitle { font-size: 12px; color: #6b6860; }
+    .pdf-identite { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px 24px; background: #f9f8f5; border: 1px solid #dedad2; border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+    .pdf-field-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #a09e99; margin-bottom: 4px; }
+    .pdf-field-value { font-size: 14px; font-weight: 500; color: #181715; }
+    .pdf-table { width: 100%; border-collapse: collapse; border: 1px solid #dedad2; border-radius: 10px; overflow: hidden; }
+    .pdf-table thead th { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #a09e99; padding: 10px 8px; text-align: center; background: #f9f8f5; border-bottom: 1px solid #dedad2; }
+    .pdf-table thead th:first-child { text-align: left; padding-left: 16px; width: 36%; }
+    .pdf-table tbody tr { border-bottom: 1px solid #eae7e0; }
+    .pdf-table tbody tr:last-child { border-bottom: none; }
+    .pdf-table tbody td { padding: 10px 6px; vertical-align: middle; font-size: 12.5px; }
+    .pdf-table tbody td:first-child { padding-left: 16px; color: #181715; }
+    .pdf-chip { display: inline-block; padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; text-align: center; width: 100%; }
+    .pdf-chip-empty { background: #f4f2ee; color: #c0bdb6; font-size: 11px; font-weight: 400; }
+    .chip-TI  { background: #378ADD; color: #fff; }
+    .chip-I   { background: #639922; color: #fff; }
+    .chip-S   { background: #EF9F27; color: #412402; }
+    .chip-TS  { background: #D85A30; color: #fff; }
+    .pdf-result { margin-top: 16px; background: #f9f8f5; border: 1px solid #dedad2; border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; gap: 20px; }
+    .pdf-score { font-size: 38px; font-weight: 700; color: #181715; line-height: 1; }
+    .pdf-score-label { font-size: 12px; color: #6b6860; margin-top: 2px; }
+    .pdf-mention-label { font-size: 10px; color: #a09e99; margin-bottom: 3px; }
+    .pdf-mention-text { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+    .pdf-progress-bg { height: 5px; background: #dedad2; border-radius: 3px; overflow: hidden; }
+    .pdf-progress-fill { height: 5px; border-radius: 3px; }
+    .pdf-legende { margin-top: 14px; display: flex; gap: 16px; }
+    .pdf-leg { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: #6b6860; }
+    .pdf-leg-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
     @media (max-width: 620px) {
       .identite { grid-template-columns: 1fr 1fr; }
@@ -165,14 +123,11 @@
       .score-number { font-size: 32px; }
       .result { flex-direction: column; align-items: flex-start; gap: 10px; }
     }
-    @media (max-width: 420px) {
-      .identite { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 420px) { .identite { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 <div class="page">
-
   <div class="header">
     <div class="header-eyebrow">Évaluation formative</div>
     <h1>Posture professionnelle en formation</h1>
@@ -190,7 +145,7 @@
     </div>
     <div>
       <div class="field-label">Semestre</div>
-      <div class="semestres" id="semestres">
+      <div class="semestres">
         <button class="sem-btn" onclick="pickSem(this,1)">S1</button>
         <button class="sem-btn" onclick="pickSem(this,2)">S2</button>
         <button class="sem-btn" onclick="pickSem(this,3)">S3</button>
@@ -212,9 +167,8 @@
       </thead>
       <tbody id="eval-body"></tbody>
     </table>
-
     <div class="result">
-      <div class="score-block">
+      <div>
         <div class="score-number" id="score-number">—</div>
         <div class="score-denom">/20</div>
       </div>
@@ -236,11 +190,58 @@
     </div>
     <div class="actions">
       <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser</button>
-      <button class="export-btn" onclick="exportPDF()">↓ Exporter en PDF</button>
+      <button class="export-btn" id="export-btn" onclick="exportPDF()">
+        <span class="spinner"></span>
+        <span class="btn-label">↓ Exporter en PDF</span>
+      </button>
     </div>
   </div>
-
 </div>
+
+<!-- ZONE PDF CACHÉE (rendu propre) -->
+<div id="pdf-zone">
+  <div class="pdf-header">
+    <div class="pdf-eyebrow">Évaluation formative</div>
+    <div class="pdf-title">Posture professionnelle en formation</div>
+    <div class="pdf-subtitle">Cette grille évalue la posture professionnelle en formation durant le semestre dernier.</div>
+  </div>
+  <div class="pdf-identite">
+    <div><div class="pdf-field-label">Nom</div><div class="pdf-field-value" id="pdf-nom">—</div></div>
+    <div><div class="pdf-field-label">Prénom</div><div class="pdf-field-value" id="pdf-prenom">—</div></div>
+    <div><div class="pdf-field-label">Semestre</div><div class="pdf-field-value" id="pdf-sem">—</div></div>
+  </div>
+  <table class="pdf-table">
+    <thead>
+      <tr>
+        <th>Critère</th>
+        <th>TI — Très insatisfaisant</th>
+        <th>I — Insatisfaisant</th>
+        <th>S — Satisfaisant</th>
+        <th>TS — Très satisfaisant</th>
+      </tr>
+    </thead>
+    <tbody id="pdf-body"></tbody>
+  </table>
+  <div class="pdf-result">
+    <div>
+      <div class="pdf-score" id="pdf-score">—</div>
+      <div class="pdf-score-label">/20</div>
+    </div>
+    <div style="flex:1">
+      <div class="pdf-mention-label" id="pdf-mention-label">En attente</div>
+      <div class="pdf-mention-text" id="pdf-mention-text" style="color:#6b6860;">—</div>
+      <div class="pdf-progress-bg"><div class="pdf-progress-fill" id="pdf-progress-fill" style="width:0%;background:#c0bdb6;"></div></div>
+    </div>
+  </div>
+  <div class="pdf-legende">
+    <div class="pdf-leg"><div class="pdf-leg-dot" style="background:#378ADD"></div>TI = 0 pt</div>
+    <div class="pdf-leg"><div class="pdf-leg-dot" style="background:#639922"></div>I = 1 pt</div>
+    <div class="pdf-leg"><div class="pdf-leg-dot" style="background:#EF9F27"></div>S = 2 pts</div>
+    <div class="pdf-leg"><div class="pdf-leg-dot" style="background:#D85A30"></div>TS = 3 pts</div>
+    <div class="pdf-leg" style="margin-left:auto;color:#a09e99;font-size:10px;">Note = score × 20 ÷ 21</div>
+  </div>
+</div>
+
 <script>
   const criteres = [
     "Ponctualité","Présence","Implication dans l'apprentissage",
@@ -255,7 +256,9 @@
 
   function buildTable() {
     const tbody = document.getElementById("eval-body");
+    const pdfBody = document.getElementById("pdf-body");
     criteres.forEach((c, i) => {
+      // Table interactive
       const tr = document.createElement("tr");
       let html = `<td class="critere-label">${c}</td>`;
       mentions.forEach(m => {
@@ -263,15 +266,32 @@
       });
       tr.innerHTML = html;
       tbody.appendChild(tr);
+
+      // Table PDF
+      const ptr = document.createElement("tr");
+      let phtml = `<td>${c}</td>`;
+      mentions.forEach(m => {
+        phtml += `<td id="pdf-cell-${i}-${m}" style="text-align:center;padding:8px 4px;"><span class="pdf-chip pdf-chip-empty">—</span></td>`;
+      });
+      ptr.innerHTML = phtml;
+      pdfBody.appendChild(ptr);
     });
   }
 
   function pick(idx, mention) {
-    selections[idx] = (selections[idx] === mention) ? undefined : mention;
+    const prev = selections[idx];
+    selections[idx] = (prev === mention) ? undefined : mention;
     if (selections[idx] === undefined) delete selections[idx];
     mentions.forEach(m => {
       document.getElementById(`btn-${idx}-${m}`).className =
         selections[idx] === m ? `note-btn selected-${m}` : "note-btn";
+      // Mise à jour PDF cells
+      const cell = document.getElementById(`pdf-cell-${idx}-${m}`);
+      if (selections[idx] === m) {
+        cell.innerHTML = `<span class="pdf-chip chip-${m}">${m}</span>`;
+      } else {
+        cell.innerHTML = `<span class="pdf-chip pdf-chip-empty">—</span>`;
+      }
     });
     updateScore();
   }
@@ -292,39 +312,90 @@
       document.getElementById("result-mention").style.color = "var(--text-muted)";
       document.getElementById("progress-fill").style.width = "0%";
       document.getElementById("progress-fill").style.background = "#c0bdb6";
+      document.getElementById("pdf-score").textContent = "—";
+      document.getElementById("pdf-mention-label").textContent = "En attente";
+      document.getElementById("pdf-mention-text").textContent = "—";
+      document.getElementById("pdf-mention-text").style.color = "#6b6860";
+      document.getElementById("pdf-progress-fill").style.width = "0%";
       return;
     }
     const total = Object.values(selections).reduce((s, m) => s + points[m], 0);
     const note = Math.round((total / MAX) * 20 * 10) / 10;
     document.getElementById("score-number").textContent = note.toFixed(1);
+    document.getElementById("pdf-score").textContent = note.toFixed(1);
     let mention, color;
     if (note < 7)       { mention = "Insuffisant";            color = "#378ADD"; }
     else if (note < 12) { mention = "En cours d'acquisition"; color = "#EF9F27"; }
     else if (note < 16) { mention = "Acquis";                 color = "#639922"; }
     else                { mention = "Très bien acquis";        color = "#D85A30"; }
-    document.getElementById("result-status").textContent = count < 7 ? `${count}/7 critères — score partiel` : "Résultat final";
+    const status = count < 7 ? `${count}/7 critères — score partiel` : "Résultat final";
+    document.getElementById("result-status").textContent = status;
     document.getElementById("result-mention").textContent = mention;
     document.getElementById("result-mention").style.color = color;
-    document.getElementById("progress-fill").style.width = Math.round((note / 20) * 100) + "%";
+    document.getElementById("progress-fill").style.width = Math.round((note/20)*100)+"%";
     document.getElementById("progress-fill").style.background = color;
+    document.getElementById("pdf-mention-label").textContent = status;
+    document.getElementById("pdf-mention-text").textContent = mention;
+    document.getElementById("pdf-mention-text").style.color = color;
+    document.getElementById("pdf-progress-fill").style.width = Math.round((note/20)*100)+"%";
+    document.getElementById("pdf-progress-fill").style.background = color;
   }
 
-  function exportPDF() {
-    const nom = document.getElementById("field-nom").value.trim().toUpperCase().replace(/\s+/g,"_") || "NOM";
-    const prenom = document.getElementById("field-prenom").value.trim()
-      .split(/\s+/).map(p => p.charAt(0).toUpperCase()+p.slice(1).toLowerCase()).join("_") || "Prenom";
-    const sem = semestre ? `_semestre_${semestre}` : "";
-    const filename = `${nom}_${prenom}_posture_professionnelle${sem}`;
-    const oldTitle = document.title;
-    document.title = filename;
-    window.print();
-    setTimeout(() => { document.title = oldTitle; }, 1500);
+  async function exportPDF() {
+    const btn = document.getElementById("export-btn");
+    btn.classList.add("loading");
+    btn.disabled = true;
+
+    const nom = document.getElementById("field-nom").value.trim();
+    const prenom = document.getElementById("field-prenom").value.trim();
+
+    // Remplir la zone PDF avec les infos identité
+    document.getElementById("pdf-nom").textContent = nom.toUpperCase() || "—";
+    document.getElementById("pdf-prenom").textContent = prenom ? prenom.charAt(0).toUpperCase()+prenom.slice(1) : "—";
+    document.getElementById("pdf-sem").textContent = semestre ? `Semestre ${semestre}` : "—";
+
+    // Nom de fichier
+    const nomFile = nom.toUpperCase().replace(/\s+/g,"_") || "NOM";
+    const prenomFile = prenom.split(/\s+/).map(p=>p.charAt(0).toUpperCase()+p.slice(1).toLowerCase()).join("_") || "Prenom";
+    const semFile = semestre ? `_semestre_${semestre}` : "";
+    const filename = `${nomFile}_${prenomFile}_posture_professionnelle${semFile}.pdf`;
+
+    // Rendre visible temporairement pour capture
+    const zone = document.getElementById("pdf-zone");
+    zone.style.left = "0";
+    zone.style.top = "0";
+    zone.style.position = "absolute";
+    zone.style.zIndex = "-1";
+
+    await new Promise(r => setTimeout(r, 150));
+
+    try {
+      const canvas = await html2canvas(zone, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const pageW = 210, pageH = 297;
+      const imgW = pageW;
+      const imgH = (canvas.height * imgW) / canvas.width;
+      // Si le contenu dépasse une page, on scale pour tenir
+      const finalH = imgH > pageH ? pageH : imgH;
+      const finalW = imgH > pageH ? (pageW * pageH) / imgH : imgW;
+      const offsetX = (pageW - finalW) / 2;
+      pdf.addImage(imgData, "JPEG", offsetX, 0, finalW, finalH);
+      pdf.save(filename);
+    } finally {
+      zone.style.left = "-9999px";
+      zone.style.position = "fixed";
+      btn.classList.remove("loading");
+      btn.disabled = false;
+    }
   }
 
   function resetAll() {
     selections = {};
     criteres.forEach((_, i) => mentions.forEach(m => {
       document.getElementById(`btn-${i}-${m}`).className = "note-btn";
+      document.getElementById(`pdf-cell-${i}-${m}`).innerHTML = `<span class="pdf-chip pdf-chip-empty">—</span>`;
     }));
     document.getElementById("field-nom").value = "";
     document.getElementById("field-prenom").value = "";
